@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useEffect, useState } from "react";
 import { PropContent } from "./Content";
 
@@ -10,14 +12,49 @@ export const useLogic = ({
   setCurrentNumber,
   gameOver,
   setStatus,
+  selectedNumbers,
+  setSelectedNumbers,
 }: PropContent) => {
-  const numbers = Array.from({ length: points }, (_, index) => index + 1);
-
   const containerHeight = 600;
   const containerWidth = (window.innerWidth / 3) * 2;
+  const numbers = Array.from({ length: points }, (_, index) => index + 1);
+  const [disabledNumbers, setDisabledNumbers] = useState<Set<number>>(
+    new Set()
+  );
+  const [timePerNumber, setTimePerNumber] = useState<{ [key: number]: number }>(
+    {}
+  );
 
-  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
+  useEffect(() => {
+    // Start the countdown for numbers clicked
+    const timer = setInterval(() => {
+      setTimePerNumber((prevTimePerNumber) => {
+        let updated = { ...prevTimePerNumber };
+        Object.keys(updated).forEach((num: any) => {
+          if (updated[num] > 0) {
+            updated[num] = parseFloat((updated[num] - 0.1).toFixed(1));
+            if (updated[num] <= 0) {
+              updated[num] = 0;
+            }
+          }
+        });
+        return updated;
+      });
+    }, 100); // Decrement time by 0.1 every 100ms
 
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    setDisabledNumbers(new Set(selectedNumbers));
+  }, [selectedNumbers]);
+
+  const checkNum = (num: number) => {
+    if (disabledNumbers.has(num)) {
+      return true;
+    }
+    return false;
+  };
   const [positions, setPositions] = useState<{
     [key: number]: { top: number; left: number };
   }>({});
@@ -30,13 +67,17 @@ export const useLogic = ({
       newPositions[num] = { top: randomTop, left: randomLeft };
     });
     setPositions(newPositions);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [points]);
+
   const handleClick = (num: number) => {
     if (gameOver) return;
     if (num === currentNumber) {
       setSelectedNumbers([...selectedNumbers, num]);
       setCurrentNumber(currentNumber + 1);
+      setTimePerNumber((prev) => ({
+        ...prev,
+        [num]: 3.0,
+      }));
       if (selectedNumbers.length + 1 === points) {
         setPoints(0);
         setGameOver(true);
@@ -55,16 +96,20 @@ export const useLogic = ({
     setCurrentNumber(1);
     setStatus(0);
     setGameOver(false);
-    setPoints(points);
+    setPoints(0);
     setPlay(false);
   };
   return {
-    numbers,
     containerHeight,
     containerWidth,
     selectedNumbers,
     positions,
+    numbers,
     handleClick,
     resetGame,
+    checkNum,
+    setDisabledNumbers,
+    timePerNumber,
+    setTimePerNumber,
   };
 };

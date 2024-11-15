@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import React, { useState } from "react";
+import React from "react";
+import LoadText from "../loading/LoadText";
 
 interface Props {
   setPoints: (points: number) => void;
@@ -8,49 +9,56 @@ interface Props {
   gameOver: boolean;
   status: number;
   currentNumber: number;
+  setCurrentNumber: (currentNumber: number) => void;
+  setSelectedNumbers: (selectedNumbers: number[]) => void;
+  inputValue: string;
+  setInputValue: (inputValue: string) => void;
+  handlePlayClick(): void;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Header: React.FC<Props> = ({
   setPoints,
+  handlePlayClick,
+  setLoading,
   play,
   currentNumber,
+  setCurrentNumber,
+  setSelectedNumbers,
   setPlay,
   gameOver,
   status,
+  inputValue,
+  setInputValue,
 }) => {
-  const [inputValue, setInputValue] = useState<string>("");
-
-  // Function to handle the "Play" button click
-  const handlePlayClick = () => {
-    const num = Number(inputValue);
-    if (!isNaN(num) && num > 0) {
-      setPoints(num); // Set points passed from parent component
-      setPlay(true); // Set play state to true after clicking "Play"
-    } else {
-      alert("Please enter a valid number of points.");
-    }
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
   return (
-    <div className="flex flex-col gap-y-4">
-      <h1 className="uppercase text-black text-2xl font-bold">
-        {status === 1
-          ? "All Cleared"
-          : status === 2
-          ? "Game Over"
-          : "Let's Play"}
+    <div className="flex flex-col relative gap-y-4 container text-white pl-4 py-2">
+      <h1
+        className={clsx("uppercase  text-2xl font-bold", {
+          "text-red-600 py-5": status === 2,
+          "text-green-600 py-5": status === 1,
+        })}
+      >
+        {status === 1 ? (
+          <LoadText title="All cleared" />
+        ) : status === 2 ? (
+          <LoadText title="Game Over" />
+        ) : (
+          "Let's Play"
+        )}
       </h1>
       <div>
         <label className="mr-2">Points:</label>
         <input
           type="number"
           placeholder="Enter points"
-          className="border px-2"
+          className="border bg-slate-600 px-2  focus-within:border-orange-400 "
           value={inputValue}
           onChange={handleInputChange}
+          disabled={play}
         />
       </div>
       <p className="">
@@ -60,23 +68,33 @@ const Header: React.FC<Props> = ({
         {!gameOver ? (
           <>
             {!play ? (
-              <button className="border-2 w-32" onClick={handlePlayClick}>
+              <button
+                className="border-2 w-32 py-1 rounded-xl hover:bg-sky-400"
+                onClick={() => {
+                  handlePlayClick();
+                }}
+              >
                 Play
               </button>
             ) : (
               <div>
-                <div>
+                <div className=" flex gap-x-2">
                   <button
-                    className="border-2 w-32"
+                    className="border-2 w-32 py-1 rounded-xl hover:bg-sky-400"
                     onClick={() => {
                       setPlay(false);
                       setInputValue("");
+                      setSelectedNumbers([]);
                       setPoints(0);
+                      setCurrentNumber(1);
+                      setLoading(true);
                     }}
                   >
                     Reset Game
                   </button>
-                  <button className="border-2 w-32">Auto Play</button>
+                  <button className="border-2 w-32 py-1 rounded-xl hover:bg-sky-400">
+                    Auto Play
+                  </button>
                 </div>
                 {play && status === 0 && (
                   <p className="pt-1">
@@ -87,18 +105,20 @@ const Header: React.FC<Props> = ({
             )}
           </>
         ) : (
-          <p className="text-2xl font-bold">
-            Finished!!!{" "}
-            <span
-              className={clsx({
-                "text-green-500": status === 1,
-                "text-red-500": status === 2,
-              })}
-            >
-              ({status === 1 ? "You Win" : status === 2 ? "You Lose" : ""}) at
-              points {inputValue}
-            </span>
-          </p>
+          <div>
+            <p className="text-2xl font-bold">
+              Finished!!!{" "}
+              <span
+                className={clsx({
+                  "text-green-500": status === 1,
+                  "text-red-500": status === 2,
+                })}
+              >
+                ({status === 1 ? "You Win" : status === 2 ? "You Lose" : ""}) at
+                points {currentNumber - 1}
+              </span>
+            </p>
+          </div>
         )}
       </div>
     </div>

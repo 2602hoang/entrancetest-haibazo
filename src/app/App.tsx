@@ -1,37 +1,66 @@
 import Header from "../components/header/Header";
 import Content from "../components/content/Content";
-import React, { useState } from "react";
+import { useLogicApp } from "./useLogic";
+import { LoadingPage } from "../components/loading/LoadingPage";
 
 const App = () => {
-  const [points, setPoints] = useState<number>(0);
-  const [play, setPlay] = useState<boolean>(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [status, setStatus] = useState<number>(0);
-  const [currentNumber, setCurrentNumber] = useState(1);
+  const {
+    points,
+    setPoints,
+    setGameOver,
+    setPlay,
+    currentNumber,
+    setCurrentNumber,
+    gameOver,
+    setStatus,
+    status,
+    selectedNumbers,
+    setSelectedNumbers,
+    handlePlayClick,
+    play,
+    inputValue,
+    setInputValue,
+    loading,
+    setLoading,
+  } = useLogicApp();
 
   return (
-    <div className="flex flex-col justify-start pt-5 items-center h-screen">
-      <div className="w-1/2 mb-2">
-        <Header
-          setPoints={setPoints}
-          play={play}
-          setPlay={setPlay}
-          gameOver={gameOver}
-          currentNumber={currentNumber}
-          status={status}
-        />
-      </div>
-      <div className="w-2/3 border-2">
-        <Content
-          points={points}
-          setPoints={setPoints}
-          currentNumber={currentNumber}
-          setCurrentNumber={setCurrentNumber}
-          gameOver={gameOver}
-          setGameOver={setGameOver}
-          setPlay={setPlay}
-          setStatus={setStatus}
-        />
+    <div>
+      <div className="flex flex-col justify-start pt-2 w-full items-center h-screen container1">
+        <div className="w-2/3 pb-2 h-[26vh]">
+          <Header
+            setLoading={setLoading}
+            handlePlayClick={handlePlayClick}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            setPoints={setPoints}
+            play={play}
+            setPlay={setPlay}
+            gameOver={gameOver}
+            currentNumber={currentNumber}
+            setCurrentNumber={setCurrentNumber}
+            status={status}
+            setSelectedNumbers={setSelectedNumbers}
+          />
+        </div>
+
+        <div className="w-2/3 border-2 h-[60vh]">
+          <LoadingPage loading={loading} setLoading={setLoading} />
+          <Content
+            points={points}
+            loading={loading}
+            setLoading={setLoading}
+            setPoints={setPoints}
+            currentNumber={currentNumber}
+            setCurrentNumber={setCurrentNumber}
+            gameOver={gameOver}
+            setGameOver={setGameOver}
+            setPlay={setPlay}
+            setStatus={setStatus}
+            selectedNumbers={selectedNumbers}
+            setSelectedNumbers={setSelectedNumbers}
+          />
+        </div>
       </div>
     </div>
   );
