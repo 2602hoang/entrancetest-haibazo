@@ -15,8 +15,12 @@ export const useLogic = ({
   selectedNumbers,
   setSelectedNumbers,
 }: PropContent) => {
-  const containerHeight = 600;
-  const containerWidth = (window.innerWidth / 3) * 2;
+  const containerHeight = window.innerHeight * 0.7;
+  console.log(window.innerWidth);
+  const containerWidth =
+    window.innerWidth > 768
+      ? (window.innerWidth / 3) * 2
+      : window.innerWidth * 0.96;
   const numbers = Array.from({ length: points }, (_, index) => index + 1);
   const [disabledNumbers, setDisabledNumbers] = useState<Set<number>>(
     new Set()

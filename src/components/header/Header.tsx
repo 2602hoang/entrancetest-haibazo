@@ -15,10 +15,14 @@ interface Props {
   setInputValue: (inputValue: string) => void;
   handlePlayClick(): void;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  timePlayer: number;
+  setTimePlayer: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Header: React.FC<Props> = ({
   setPoints,
+  timePlayer,
+  setTimePlayer,
   handlePlayClick,
   setLoading,
   play,
@@ -34,6 +38,7 @@ const Header: React.FC<Props> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
+
   return (
     <div className="flex flex-col relative gap-y-4 container text-white pl-4 py-2">
       <h1
@@ -62,7 +67,7 @@ const Header: React.FC<Props> = ({
         />
       </div>
       <p className="">
-        Time:<span className="ml-5">00:00:00</span>
+        Time:<span className="ml-5">{timePlayer}s</span>
       </p>
       <div className=" flex gap-x-2">
         {!gameOver ? (
@@ -72,6 +77,7 @@ const Header: React.FC<Props> = ({
                 className="border-2 w-32 py-1 rounded-xl hover:bg-sky-400"
                 onClick={() => {
                   handlePlayClick();
+                  setTimePlayer(0.0);
                 }}
               >
                 Play
@@ -87,6 +93,7 @@ const Header: React.FC<Props> = ({
                       setSelectedNumbers([]);
                       setPoints(0);
                       setCurrentNumber(1);
+                      setTimePlayer(0.0);
                       setLoading(true);
                     }}
                   >
@@ -97,7 +104,7 @@ const Header: React.FC<Props> = ({
                   </button>
                 </div>
                 {play && status === 0 && (
-                  <p className="pt-1">
+                  <p className="py-1">
                     Next Num: <span className="font-bold">{currentNumber}</span>
                   </p>
                 )}

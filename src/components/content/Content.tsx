@@ -15,10 +15,12 @@ export interface PropContent {
   setSelectedNumbers: (selectedNumbers: number[]) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setTimePlayer: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Content: React.FC<PropContent> = ({
   points,
+  setTimePlayer,
   setPoints,
   setGameOver,
   setPlay,
@@ -45,6 +47,7 @@ const Content: React.FC<PropContent> = ({
     points,
     loading,
     setLoading,
+    setTimePlayer,
     setPoints,
     setGameOver,
     setPlay,
@@ -64,7 +67,7 @@ const Content: React.FC<PropContent> = ({
   return (
     <>
       <div
-        className="relative container p-7"
+        className="relative container "
         style={{ minHeight: containerHeight, width: containerWidth }}
       >
         {numbers.reverse().map((num) => {
@@ -113,6 +116,7 @@ const Content: React.FC<PropContent> = ({
               onClick={() => {
                 resetGame();
                 setTimePerNumber({});
+                setTimePlayer(0.0);
               }}
             >
               New Game

@@ -17,6 +17,8 @@ const App = () => {
     selectedNumbers,
     setSelectedNumbers,
     handlePlayClick,
+    timePlayer,
+    setTimePlayer,
     play,
     inputValue,
     setInputValue,
@@ -26,10 +28,12 @@ const App = () => {
 
   return (
     <div>
-      <div className="flex flex-col justify-start pt-2 w-full items-center h-screen container1">
-        <div className="w-2/3 pb-2 h-[26vh]">
+      <div className="flex flex-col justify-start pt-2 w-full  items-center h-screen container1">
+        <div className="w-full px-3 lg:px-0 lg:w-2/3 pb-1 h-[27vh]">
           <Header
             setLoading={setLoading}
+            timePlayer={timePlayer}
+            setTimePlayer={setTimePlayer}
             handlePlayClick={handlePlayClick}
             inputValue={inputValue}
             setInputValue={setInputValue}
@@ -44,9 +48,10 @@ const App = () => {
           />
         </div>
 
-        <div className="w-2/3 border-2 h-[60vh]">
+        <div className=" lg:h-[60vh] xl:h-[70vh]">
           <LoadingPage loading={loading} setLoading={setLoading} />
           <Content
+            setTimePlayer={setTimePlayer}
             points={points}
             loading={loading}
             setLoading={setLoading}

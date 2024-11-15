@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useLogicApp = () => {
   const [points, setPoints] = useState<number>(0);
@@ -9,6 +9,30 @@ export const useLogicApp = () => {
   const [currentNumber, setCurrentNumber] = useState(1);
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [timePlayer, setTimePlayer] = useState(0.0);
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (play && !gameOver && !timerRunning) {
+      const id = setInterval(() => {
+        setTimePlayer((prevTime) => parseFloat((prevTime + 0.1).toFixed(1)));
+      }, 100);
+      setIntervalId(id);
+      setTimerRunning(true);
+    } else if (!play || gameOver) {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+      setTimerRunning(false);
+      setIntervalId(null);
+    }
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [play, gameOver, timerRunning, intervalId]);
 
   const handlePlayClick = () => {
     const num = Number(inputValue);
@@ -54,6 +78,8 @@ export const useLogicApp = () => {
     handlePlayClick,
     play,
     inputValue,
+    timePlayer,
+    setTimePlayer,
     loading,
     setLoading,
     setInputValue,
