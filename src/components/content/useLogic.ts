@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useEffect, useState } from "react";
 import { PropContent } from "./Content";
 
@@ -16,7 +14,6 @@ export const useLogic = ({
   setSelectedNumbers,
 }: PropContent) => {
   const containerHeight = window.innerHeight * 0.7;
-  console.log(window.innerWidth);
   const containerWidth =
     window.innerWidth > 768
       ? (window.innerWidth / 3) * 2
@@ -30,7 +27,6 @@ export const useLogic = ({
   );
 
   useEffect(() => {
-    // Start the countdown for numbers clicked
     const timer = setInterval(() => {
       setTimePerNumber((prevTimePerNumber) => {
         let updated = { ...prevTimePerNumber };
@@ -44,7 +40,7 @@ export const useLogic = ({
         });
         return updated;
       });
-    }, 100); // Decrement time by 0.1 every 100ms
+    }, 100);
 
     return () => clearInterval(timer);
   }, []);

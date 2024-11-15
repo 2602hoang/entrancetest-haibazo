@@ -9,7 +9,6 @@ export const LoadingPage: React.FC<Prop> = ({ loading, setLoading }) => {
       setLoading(false);
     }, 500);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   if (!loading) {
