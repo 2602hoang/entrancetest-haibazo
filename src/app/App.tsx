@@ -29,7 +29,7 @@ const App = () => {
   return (
     <div>
       <div className="flex flex-col justify-start pt-2 w-full  items-center h-screen container1">
-        <div className="w-full px-3 lg:px-0 lg:w-2/3 pb-1 h-[27vh]">
+        <div className="w-full px-3 lg:px-0 lg:w-2/3 pb-1 h-[29vh] lg:h-[27vh]">
           <Header
             setLoading={setLoading}
             timePlayer={timePlayer}
