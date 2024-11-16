@@ -16,6 +16,12 @@ export interface PropContent {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setTimePlayer: React.Dispatch<React.SetStateAction<number>>;
+  handleClick: (num: number) => void;
+  timePerNumber: { [key: number]: number };
+  setTimePerNumber: React.Dispatch<
+    React.SetStateAction<{ [key: number]: number }>
+  >;
+  checkNum: (num: number) => boolean;
 }
 
 const Content: React.FC<PropContent> = ({
@@ -32,32 +38,31 @@ const Content: React.FC<PropContent> = ({
   setStatus,
   loading,
   setLoading,
+  handleClick,
+  timePerNumber,
+  setTimePerNumber,
+  checkNum,
 }) => {
-  const {
-    containerHeight,
-    containerWidth,
-    positions,
-    handleClick,
-    resetGame,
-    numbers,
-    checkNum,
-    timePerNumber,
-    setTimePerNumber,
-  } = useLogic({
-    points,
-    loading,
-    setLoading,
-    setTimePlayer,
-    setPoints,
-    setGameOver,
-    setPlay,
-    currentNumber,
-    setSelectedNumbers,
-    selectedNumbers,
-    setCurrentNumber,
-    gameOver,
-    setStatus,
-  });
+  const { containerHeight, containerWidth, positions, resetGame, numbers } =
+    useLogic({
+      points,
+      loading,
+      setLoading,
+      setTimePlayer,
+      handleClick,
+      timePerNumber,
+      setTimePerNumber,
+      setPoints,
+      setGameOver,
+      setPlay,
+      currentNumber,
+      setSelectedNumbers,
+      selectedNumbers,
+      setCurrentNumber,
+      gameOver,
+      setStatus,
+      checkNum,
+    });
   const handleNumberClick = (num: number) => {
     if (!selectedNumbers.includes(num)) {
       handleClick(num);

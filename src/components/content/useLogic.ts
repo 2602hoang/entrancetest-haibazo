@@ -19,42 +19,6 @@ export const useLogic = ({
       ? (window.innerWidth / 3) * 2
       : window.innerWidth * 0.96;
   const numbers = Array.from({ length: points }, (_, index) => index + 1);
-  const [disabledNumbers, setDisabledNumbers] = useState<Set<number>>(
-    new Set()
-  );
-  const [timePerNumber, setTimePerNumber] = useState<{ [key: number]: number }>(
-    {}
-  );
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimePerNumber((prevTimePerNumber) => {
-        let updated = { ...prevTimePerNumber };
-        Object.keys(updated).forEach((num: any) => {
-          if (updated[num] > 0) {
-            updated[num] = parseFloat((updated[num] - 0.1).toFixed(1));
-            if (updated[num] <= 0) {
-              updated[num] = 0;
-            }
-          }
-        });
-        return updated;
-      });
-    }, 100);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    setDisabledNumbers(new Set(selectedNumbers));
-  }, [selectedNumbers]);
-
-  const checkNum = (num: number) => {
-    if (disabledNumbers.has(num)) {
-      return true;
-    }
-    return false;
-  };
   const [positions, setPositions] = useState<{
     [key: number]: { top: number; left: number };
   }>({});
@@ -69,28 +33,6 @@ export const useLogic = ({
     setPositions(newPositions);
   }, [points]);
 
-  const handleClick = (num: number) => {
-    if (gameOver) return;
-    if (num === currentNumber) {
-      setSelectedNumbers([...selectedNumbers, num]);
-      setCurrentNumber(currentNumber + 1);
-      setTimePerNumber((prev) => ({
-        ...prev,
-        [num]: 3.0,
-      }));
-      if (selectedNumbers.length + 1 === points) {
-        setPoints(0);
-        setGameOver(true);
-        alert("You won!");
-        setStatus(1);
-      }
-    } else {
-      setPoints(0);
-      setGameOver(true);
-      alert("You lost!");
-      setStatus(2);
-    }
-  };
   const resetGame = () => {
     setSelectedNumbers([]);
     setCurrentNumber(1);
@@ -105,11 +47,6 @@ export const useLogic = ({
     selectedNumbers,
     positions,
     numbers,
-    handleClick,
     resetGame,
-    checkNum,
-    setDisabledNumbers,
-    timePerNumber,
-    setTimePerNumber,
   };
 };

@@ -24,6 +24,12 @@ const App = () => {
     setInputValue,
     loading,
     setLoading,
+    handleClick,
+    timePerNumber,
+    setTimePerNumber,
+    checkNum,
+    setAutoClicking,
+    autoClicking,
   } = useLogicApp();
 
   return (
@@ -45,12 +51,18 @@ const App = () => {
             setCurrentNumber={setCurrentNumber}
             status={status}
             setSelectedNumbers={setSelectedNumbers}
+            setAutoClicking={setAutoClicking}
+            autoClicking={autoClicking}
           />
         </div>
 
         <div className=" lg:h-[60vh] xl:h-[70vh]">
           <LoadingPage loading={loading} setLoading={setLoading} />
           <Content
+            checkNum={checkNum}
+            handleClick={handleClick}
+            setTimePerNumber={setTimePerNumber}
+            timePerNumber={timePerNumber}
             setTimePlayer={setTimePlayer}
             points={points}
             loading={loading}

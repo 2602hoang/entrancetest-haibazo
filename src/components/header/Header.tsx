@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 import LoadText from "../loading/LoadText";
+import { IconPause, IconPlay } from "../../icon";
 
 interface Props {
   setPoints: (points: number) => void;
@@ -17,6 +18,8 @@ interface Props {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   timePlayer: number;
   setTimePlayer: React.Dispatch<React.SetStateAction<number>>;
+  setAutoClicking: React.Dispatch<React.SetStateAction<boolean>>;
+  autoClicking: boolean;
 }
 
 const Header: React.FC<Props> = ({
@@ -27,6 +30,8 @@ const Header: React.FC<Props> = ({
   setLoading,
   play,
   currentNumber,
+  setAutoClicking,
+  autoClicking,
   setCurrentNumber,
   setSelectedNumbers,
   setPlay,
@@ -78,6 +83,7 @@ const Header: React.FC<Props> = ({
                 onClick={() => {
                   handlePlayClick();
                   setTimePlayer(0.0);
+                  setAutoClicking(false);
                 }}
               >
                 Play
@@ -95,12 +101,25 @@ const Header: React.FC<Props> = ({
                       setCurrentNumber(1);
                       setTimePlayer(0.0);
                       setLoading(true);
+                      setAutoClicking(false);
                     }}
                   >
                     Reset Game
                   </button>
-                  <button className="border-2 w-32 py-1 rounded-xl hover:bg-sky-400">
+                  <button
+                    onClick={() => setAutoClicking(!autoClicking)}
+                    className="border-2 w-32 py-1 rounded-xl hover:bg-sky-400 flex items-center justify-center gap-x-1 "
+                  >
                     Auto Play
+                    {!autoClicking ? (
+                      <span className="flex justify-center items-center gap-1 animate-spin">
+                        <IconPlay />
+                      </span>
+                    ) : (
+                      <span className="flex justify-center items-center gap-1">
+                        <IconPause />
+                      </span>
+                    )}
                   </button>
                 </div>
                 {play && status === 0 && (
