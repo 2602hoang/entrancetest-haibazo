@@ -12,7 +12,79 @@ export const useLogicApp = () => {
   const [timePlayer, setTimePlayer] = useState(0.0);
   const [timerRunning, setTimerRunning] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [autoClicking, setAutoClicking] = useState(false);
+  const [timePerNumber, setTimePerNumber] = useState<{
+    [key: number]: number;
+  }>({});
+  const [disabledNumbers, setDisabledNumbers] = useState<Set<number>>(
+    new Set()
+  );
+  const checkNum = (num: number) => {
+    if (disabledNumbers.has(num)) {
+      return true;
+    }
+    return false;
+  };
+  const handleClick = (num: number) => {
+    if (gameOver) return;
+    if (num === currentNumber) {
+      setSelectedNumbers([...selectedNumbers, num]);
+      setCurrentNumber(currentNumber + 1);
+      setTimePerNumber((prev) => ({
+        ...prev,
+        [num]: 3.0,
+      }));
+      if (selectedNumbers.length + 1 === points) {
+        setPoints(0);
+        setGameOver(true);
+        alert("You won!");
+        setStatus(1);
+      }
+    } else {
+      setPoints(0);
+      setGameOver(true);
+      alert("You lost!");
+      setStatus(2);
+    }
+  };
 
+  useEffect(() => {
+    setDisabledNumbers(new Set(selectedNumbers));
+  }, [selectedNumbers]);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimePerNumber((prevTimePerNumber) => {
+        let updated = { ...prevTimePerNumber };
+        Object.keys(updated).forEach((num: any) => {
+          if (updated[num] > 0) {
+            updated[num] = parseFloat((updated[num] - 0.1).toFixed(1));
+            if (updated[num] <= 0) {
+              updated[num] = 0;
+            }
+          }
+        });
+        return updated;
+      });
+    }, 100);
+
+    return () => clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    if (gameOver || currentNumber > points || !autoClicking) return;
+
+    const autoClickNextNumber = setInterval(() => {
+      if (currentNumber <= points) {
+        const nextNum = currentNumber;
+        if (!checkNum(nextNum)) {
+          handleClick(nextNum);
+        }
+      } else {
+        clearInterval(autoClickNextNumber);
+      }
+    }, 2000);
+
+    return () => clearInterval(autoClickNextNumber);
+  }, [currentNumber, gameOver, points, selectedNumbers, autoClicking]);
   useEffect(() => {
     if (play && !gameOver && !timerRunning) {
       const id = setInterval(() => {
@@ -83,5 +155,11 @@ export const useLogicApp = () => {
     loading,
     setLoading,
     setInputValue,
+    handleClick,
+    timePerNumber,
+    setTimePerNumber,
+    checkNum,
+    setAutoClicking,
+    autoClicking,
   };
 };
